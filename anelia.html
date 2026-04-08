@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Дигитална Визитка - Анелия Христова</title>
+    <!-- Библиотека за икони -->
+    <link rel="stylesheet" href="https://cloudflare.com">
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(180deg, #b3d1ff 0%, #ffffff 40%);
+            --text-color: #333;
+            --accent-color: #555;
+            --link-color: #007AFF;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .card-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .profile-pic {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            object-fit: cover;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 22px;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        .quick-actions {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .quick-actions a {
+            font-size: 24px;
+            color: var(--accent-color);
+            text-decoration: none;
+            transition: transform 0.2s;
+        }
+        
+        .quick-actions a:active {
+            transform: scale(1.2);
+        }
+
+        .info-list {
+            text-align: left;
+            margin-bottom: 30px;
+            background: rgba(255,255,255,0.5);
+            padding: 15px;
+            border-radius: 15px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 0.5px solid #eee;
+        }
+
+        .info-item:last-child { border-bottom: none; }
+
+        .info-item i {
+            width: 35px;
+            color: #555;
+            font-size: 18px;
+        }
+
+        .info-content label {
+            display: block;
+            font-size: 11px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .info-content span, .info-content a {
+            font-size: 15px;
+            color: var(--text-color);
+            text-decoration: none;
+        }
+
+        .add-contact-btn {
+            display: inline-block;
+            margin-top: 20px;
+            background: #4A90E2;
+            color: white !important;
+            padding: 12px 25px;
+            border-radius: 25px;
+            text-decoration: none !important;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
+            cursor: pointer;
+        }
+        
+        .add-contact-btn i {
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card-container">
+    <!-- Снимка -->
+    <img src="./anelia.png" alt="Анелия Христова" class="profile-pic">
+    
+    <h1>Анелия Христова</h1>
+
+    <!-- Бързи бутони -->
+    <div class="quick-actions">
+        <a href="tel:+359887394159" title="Обаждане"><i class="fa-solid fa-phone"></i></a>
+        <a href="mailto:anelia@nolina.bg" title="Имейл"><i class="fa-solid fa-envelope"></i></a>
+        <a href="https://google.com, бул. Асен Йорданов 9" target="_blank" title="Адрес"><i class="fa-solid fa-location-dot"></i></a>
+    </div>
+
+    <div class="info-list">
+        <!-- ЛОГО -->
+        <div class="info-item" style="border-bottom: none;">
+            <i class="fa-solid fa-building"></i>
+            <div class="info-content">
+                <img src="./logo_Nolina.png" alt="Nolina Logo" style="width: 130px; height: auto; margin-top: 5px;">
+            </div>
+        </div>
+
+        <!-- ТЕЛЕФОН -->
+        <div class="info-item">
+            <i class="fa-solid fa-mobile-screen"></i>
+            <div class="info-content">
+                <label>Телефон</label>
+                <a href="tel:+359887394159">+359 887 394 159</a>
+            </div>
+        </div>
+
+        <!-- ИМЕЙЛ -->
+        <div class="info-item">
+            <i class="fa-solid fa-envelope-open-text"></i>
+            <div class="info-content">
+                <label>Имейл</label>
+                <a href="mailto:anelia@nolina.bg">anelia@nolina.bg</a>
+            </div>
+        </div>
+
+        <!-- WEB -->
+        <div class="info-item">
+            <i class="fa-solid fa-globe"></i>
+            <div class="info-content">
+                <label>Уебсайт</label>
+                <a href="http://nolina.bg" target="_blank">www.nolina.bg</a>
+            </div>
+        </div>
+
+        <!-- АДРЕС -->
+        <div class="info-item">
+            <i class="fa-solid fa-map-pin"></i>
+            <div class="info-content">
+                <label>Адрес</label>
+                <span>гр. София, бул. Асен Йорданов №9</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Бутон за добавяне в контакти -->
+    <a href="#" class="add-contact-btn" onclick="downloadVcf()">
+        <i class="fa-solid fa-user-plus"></i> Добави в контакти
+    </a>
+</div>
+
+<script>
+function downloadVcf() {
+    // Дефиниране на данните за контакта
+    const vcard = "BEGIN:VCARD\n" +
+                  "VERSION:3.0\n" +
+                  "FN:Анелия Христова\n" +
+                  "ORG:Nolina\n" +
+                  "TEL;TYPE=CELL:+359887394159\n" +
+                  "EMAIL:anelia@nolina.bg\n" +
+                  "ADR;TYPE=WORK:;;бул. Асен Йорданов 9;София;;1000;България\n" +
+                  "URL:http://nolina.bg\n" +
+                  "END:VCARD";
+
+    const blob = new Blob([vcard], { type: "text/vcard" });
+    const url = window.URL.createObjectURL(blob);
+    const newLink = document.createElement('a');
+    newLink.download = "Anelia_Hristova.vcf";
+    newLink.href = url;
+    newLink.click();
+    window.URL.revokeObjectURL(url);
+}
+</script>
+
+</body>
+</html>
