@@ -183,52 +183,56 @@
 
 <script>
 function downloadVcf(event) {
-    event.preventDefault(); // Спира презареждането на страницата
+    if (event) event.preventDefault();
 
+    // ПРЕМАХНАТИ ИНТЕРВАЛИ СЛЕД ДВОЕТОЧИЯТА - КРИТИЧНО ЗА ANDROID!
     const vcard = "BEGIN:VCARD\r\n" +
                   "VERSION:3.0\r\n" +
                   "FN:Ivelin Markov\r\n" +
                   "ORG:Nolina\r\n" +
-                  "TITLE: Marketing & Sales Manager\r\n" +
-                  "TEL;TYPE=CELL,VOICE: +359886433083\r\n" +
-                  "EMAIL;TYPE=PREF,INTERNET: markov@nolina.bg\r\n" +
+                  "TITLE:Marketing & Sales Manager\r\n" +
+                  "TEL;TYPE=CELL,VOICE:+359886433083\r\n" +
+                  "EMAIL;TYPE=PREF,INTERNET:markov@nolina.bg\r\n" +
                   "URL:http://nolina.bg\r\n" +
                   "END:VCARD";
 
     const fileName = "Ivelin_Markov.vcf";
-    const mimeType = "text/vcard";
+    
+    // Проверка дали е iOS - Share API работи най-добре там
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
-    // Проверка за iOS/Android Share API
-    if (navigator.share && navigator.canShare) {
-        const file = new File([vcard], fileName, { type: mimeType });
+    if (isIOS && navigator.share && navigator.canShare) {
+        const file = new File([vcard], fileName, { type: "text/vcard" });
         if (navigator.canShare({ files: [file] })) {
             navigator.share({
                 files: [file],
-                title: 'Ivelin Markov',
-                text: 'Contact details for Ivelin Markov'
-            }).catch(err => {
-                console.log("Share failed:", err);
-                fallbackDownload(vcard, fileName, mimeType);
-            });
+                title: 'Ivelin Markov'
+            }).catch(() => fallbackDownload(vcard, fileName));
             return;
         }
     }
 
-    fallbackDownload(vcard, fileName, mimeType);
+    // За Android и Desktop директното изтегляне е по-надеждно
+    fallbackDownload(vcard, fileName);
 }
 
-function fallbackDownload(vcard, fileName, mimeType) {
-    const blob = new Blob([vcard], { type: mimeType });
+function fallbackDownload(vcard, fileName) {
+    // Използваме универсален MIME тип, който Android разпознава по-добре при теглене
+    const blob = new Blob([vcard], { type: "text/vcard;charset=utf-8" });
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
+    
     link.href = url;
-    link.download = fileName;
+    link.setAttribute("download", fileName);
+    link.style.display = 'none';
+    
     document.body.appendChild(link);
     link.click();
+    
     setTimeout(() => {
         document.body.removeChild(link);
         window.URL.revokeObjectURL(url);
-    }, 100);
+    }, 250);
 }
 </script>
 
