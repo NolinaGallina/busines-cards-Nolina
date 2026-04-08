@@ -185,7 +185,6 @@
 function downloadVcf(event) {
     if (event) event.preventDefault();
 
-    // ПРЕМАХНАТИ ИНТЕРВАЛИ СЛЕД ДВОЕТОЧИЯТА - КРИТИЧНО ЗА ANDROID!
     const vcard = "BEGIN:VCARD\r\n" +
                   "VERSION:3.0\r\n" +
                   "FN:Ivelin Markov\r\n" +
@@ -197,33 +196,33 @@ function downloadVcf(event) {
                   "END:VCARD";
 
     const fileName = "Ivelin_Markov.vcf";
-    
-    // Проверка дали е iOS - Share API работи най-добре там
+
+    // ПРОВЕРКА ЗА IOS
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
-    if (isIOS && navigator.share && navigator.canShare) {
+    if (isIOS && navigator.share) {
         const file = new File([vcard], fileName, { type: "text/vcard" });
-        if (navigator.canShare({ files: [file] })) {
-            navigator.share({
-                files: [file],
-                title: 'Ivelin Markov'
-            }).catch(() => fallbackDownload(vcard, fileName));
-            return;
-        }
+        navigator.share({
+            files: [file],
+            title: 'Ivelin Markov'
+        }).catch(err => {
+            // Fallback ако потребителят затвори прозореца
+            forceDownload(vcard, fileName);
+        });
+    } else {
+        // МЕТОД ЗА ANDROID И ДРУГИ (Използваме Data URI с base64)
+        forceDownload(vcard, fileName);
     }
-
-    // За Android и Desktop директното изтегляне е по-надеждно
-    fallbackDownload(vcard, fileName);
 }
 
-function fallbackDownload(vcard, fileName) {
-    // Използваме универсален MIME тип, който Android разпознава по-добре при теглене
-    const blob = new Blob([vcard], { type: "text/vcard;charset=utf-8" });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
+function forceDownload(vcard, fileName) {
+    // Кодираме vCard в Base64, за да не се чупи от специални символи
+    const base64Vcard = btoa(unescape(encodeURIComponent(vcard)));
+    const dataUri = 'data:text/vcard;base64,' + base64Vcard;
     
-    link.href = url;
-    link.setAttribute("download", fileName);
+    const link = document.createElement('a');
+    link.href = dataUri;
+    link.setAttribute('download', fileName);
     link.style.display = 'none';
     
     document.body.appendChild(link);
@@ -231,8 +230,7 @@ function fallbackDownload(vcard, fileName) {
     
     setTimeout(() => {
         document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
-    }, 250);
+    }, 100);
 }
 </script>
 
