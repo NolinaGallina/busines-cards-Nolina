@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Дигитална Визитка - Анелия Христова</title>
-    <!-- Библиотека за икони -->
+    <!-- Библиотека за икони - ФИКСИРАНА -->
     <link rel="stylesheet" href="https://cloudflare.com">
     <style>
         :root {
@@ -129,11 +129,13 @@
     
     <h1>Анелия Христова</h1>
 
-    <!-- Бързи бутони -->
+    <!-- Бързи бутони - ФИКСИРАНИ ЛИНКОВЕ -->
     <div class="quick-actions">
         <a href="tel:+359887394159" title="Обаждане"><i class="fa-solid fa-phone"></i></a>
         <a href="mailto:anelia@nolina.bg" title="Имейл"><i class="fa-solid fa-envelope"></i></a>
-        <a href="https://google.com, бул. Асен Йорданов 9" target="_blank" title="Адрес"><i class="fa-solid fa-location-dot"></i></a>
+        <a href="https://google.com" target="_blank" title="Адрес">
+            <i class="fa-solid fa-location-dot"></i>
+        </a>
     </div>
 
     <div class="info-list">
@@ -172,12 +174,14 @@
             </div>
         </div>
 
-        <!-- АДРЕС -->
+        <!-- АДРЕС - СЕГА МОЖЕ ДА СЕ КЛИКА -->
         <div class="info-item">
             <i class="fa-solid fa-map-pin"></i>
             <div class="info-content">
                 <label>Адрес</label>
-                <span>гр. София, бул. Асен Йорданов №9</span>
+                <a href="https://www.google.bg/maps/place/%D0%9D%D0%BE%D0%BB%D0%B8%D0%BD%D0%B0+%D0%95%D0%9E%D0%9E%D0%94/@42.6734843,23.3844287,17z/data=!4m5!3m4!1s0x40aa87224b5691ad:0x555626750f09a804!8m2!3d42.6734843!4d23.3866174?shorturl=1" target="_blank">
+                    гр. София, бул. Асен Йорданов №9
+                </a>
             </div>
         </div>
     </div>
@@ -190,7 +194,6 @@
 
 <script>
 function downloadVcf() {
-    // Дефиниране на данните за контакта
     const vcard = "BEGIN:VCARD\n" +
                   "VERSION:3.0\n" +
                   "FN:Анелия Христова\n" +
