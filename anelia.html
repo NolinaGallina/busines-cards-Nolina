@@ -191,42 +191,47 @@ function downloadVcf(event) {
                   "VERSION:3.0\r\n" +
                   "FN:Anelia Hristova\r\n" +
                   "ORG:Nolina\r\n" +
-                  "TITLE:Marketing Manager\r\n" +
+                  "TITLE:Marketing & Advertising Manager\r\n" +
                   "TEL;TYPE=CELL,VOICE:+359887394159\r\n" +
                   "EMAIL;TYPE=PREF,INTERNET:anelia@nolina.bg\r\n" +
-                  "ADR;TYPE=WORK:;;9 Asen Yodranov Blvd.;Sofia;;1592;Bulgaria\r\n" +
                   "URL:http://nolina.bg\r\n" +
                   "END:VCARD";
 
     const fileName = "Anelia_Hristova.vcf";
-    const mimeType = "text/vcard";
 
-    if (navigator.share && navigator.canShare) {
-        const file = new File([vcard], fileName, { type: mimeType });
-        if (navigator.canShare({ files: [file] })) {
-            navigator.share({
-                files: [file],
-                title: 'Anelia Hristova'
-            }).catch(err => {
-                fallbackDownload(vcard, fileName, mimeType);
-            });
-            return;
-        }
+    // ПРОВЕРКА ЗА IOS
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+    if (isIOS && navigator.share) {
+        const file = new File([vcard], fileName, { type: "text/vcard" });
+        navigator.share({
+            files: [file],
+            title: 'Anelia Hristova'
+        }).catch(err => {
+            // Fallback ако потребителят затвори прозореца
+            forceDownload(vcard, fileName);
+        });
+    } else {
+        // МЕТОД ЗА ANDROID И ДРУГИ (Използваме Data URI с base64)
+        forceDownload(vcard, fileName);
     }
-    fallbackDownload(vcard, fileName, mimeType);
 }
 
-function fallbackDownload(vcard, fileName, mimeType) {
-    const blob = new Blob([vcard], { type: mimeType });
-    const url = window.URL.createObjectURL(blob);
+function forceDownload(vcard, fileName) {
+    // Кодираме vCard в Base64, за да не се чупи от специални символи
+    const base64Vcard = btoa(unescape(encodeURIComponent(vcard)));
+    const dataUri = 'data:text/vcard;base64,' + base64Vcard;
+    
     const link = document.createElement('a');
-    link.href = url;
-    link.download = fileName;
+    link.href = dataUri;
+    link.setAttribute('download', fileName);
+    link.style.display = 'none';
+    
     document.body.appendChild(link);
     link.click();
+    
     setTimeout(() => {
         document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
     }, 100);
 }
 </script>
